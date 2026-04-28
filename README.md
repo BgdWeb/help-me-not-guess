@@ -4,6 +4,8 @@ A sendable static prototype for helping a friend tell you what housewarming gift
 
 Open `index.html` directly in a browser. The artifact is intentionally static and includes local SVG assets, so it does not need a build step or dev server.
 
+Results use a zero-backend flow: when a friend taps **Send picks**, the page opens a prefilled email to Tarek and copies the response text as a fallback.
+
 ## What It Tests
 
 - Starting with a few thoughtful guesses instead of asking from a blank page.
