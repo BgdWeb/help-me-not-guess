@@ -646,6 +646,45 @@
       line-height: 1.35;
     }
 
+    .thanks-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(31, 39, 36, .46);
+      backdrop-filter: blur(10px);
+    }
+
+    .thanks-overlay.is-visible {
+      display: grid;
+    }
+
+    .thanks-card {
+      width: min(420px, 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffdfa;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .thanks-card h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(34px, 8vw, 52px);
+      line-height: .96;
+      margin: 0 0 10px;
+    }
+
+    .thanks-card p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
     .confirmed-row {
       display: grid;
       grid-template-columns: 52px 1fr auto;
@@ -853,6 +892,13 @@
     </aside>
   </main>
 
+  <div class="thanks-overlay" data-thanks-overlay role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+    <section class="thanks-card" tabindex="-1">
+      <h2 id="thanks-title">Por fin, gracias.</h2>
+      <p>Ya le llegó a Tarek. Ahora sí pueden seguir estrenando casa.</p>
+    </section>
+  </div>
+
   <script type="module">
     const fallbackPretext = {
       prepare(text, font) {
@@ -876,7 +922,7 @@
       pretext = fallbackPretext;
     }
 
-    const resultEmail = "tarek@baron-global.com";
+    const resultEndpoint = "https://formsubmit.co/ajax/tarek@baron-global.com";
 
     const state = {
       nextId: 5,
@@ -908,7 +954,8 @@
       recipientLink: document.querySelector("[data-recipient-link]"),
       recipientPhotoInput: document.querySelector("[data-recipient-photo]"),
       recipientPreview: document.querySelector("[data-recipient-preview]"),
-      sendStatuses: document.querySelectorAll("[data-send-status]")
+      sendStatuses: document.querySelectorAll("[data-send-status]"),
+      thanksOverlay: document.querySelector("[data-thanks-overlay]")
     };
 
     const prepared = new Map();
@@ -1099,22 +1146,15 @@
       return lines.join("\n");
     }
 
-    async function copyResultText(text) {
-      let copied = false;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          copied = true;
-        }
-      } catch (_) {
-        copied = false;
-      }
-      return copied || fallbackCopy(text);
-    }
-
     function setSendButtons(label) {
       document.querySelectorAll("[data-send-choices]").forEach((button) => {
         button.textContent = label;
+      });
+    }
+
+    function setSendDisabled(disabled) {
+      document.querySelectorAll("[data-send-choices]").forEach((button) => {
+        button.disabled = disabled;
       });
     }
 
@@ -1124,17 +1164,48 @@
       });
     }
 
+    function showThanks() {
+      els.thanksOverlay.classList.add("is-visible");
+      els.thanksOverlay.querySelector(".thanks-card").focus?.();
+    }
+
+    async function submitResults(text) {
+      const response = await fetch(resultEndpoint, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: "Respuestas de Raed y Maria",
+          _template: "table",
+          _captcha: "false",
+          _url: "https://bgdweb.github.io/help-me-not-guess/",
+          origen: "Regalo para Raed y Maria",
+          mensaje: text
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("No se pudo enviar");
+      }
+    }
+
     async function sendResults() {
       const text = buildReplyText();
-      const copied = await copyResultText(text);
-      const subject = "Respuestas de Raed y Maria";
-      const mailto = `mailto:${encodeURIComponent(resultEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
-      setSendButtons("Abriendo correo");
-      setSendStatus(copied ? "También se copió por si el correo no abre." : "Abriendo correo.");
-      window.location.href = mailto;
-      setTimeout(() => {
+      setSendDisabled(true);
+      setSendButtons("Enviando");
+      setSendStatus("Mandando la respuesta...");
+
+      try {
+        await submitResults(text);
+        setSendStatus("");
+        showThanks();
+      } catch (_) {
+        setSendStatus("No salió. Prueben otra vez en un momentico.");
         setSendButtons("Enviar");
-      }, 1600);
+        setSendDisabled(false);
+      }
     }
 
     els.seedPhotoInput.addEventListener("change", (event) => {

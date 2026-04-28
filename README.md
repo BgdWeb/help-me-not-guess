@@ -4,7 +4,9 @@ Un prototipo estático y enviable para que Raed y Maria le digan a Tarek qué re
 
 Abre `index.html` directamente en el navegador. Es estático, con assets SVG locales, así que no necesita build ni servidor.
 
-Las respuestas no usan backend: al tocar **Enviar**, la página abre un correo listo para Tarek y copia el texto como respaldo.
+Las respuestas usan un endpoint de formulario externo: al tocar **Enviar**, la página manda el correo en segundo plano y muestra una pantalla de gracias, sin abrir Gmail ni el cliente de correo.
+
+La primera vez, FormSubmit puede mandar un correo de activación a Tarek; después de confirmar, las respuestas llegan directo al inbox.
 
 ## Qué Prueba
 
