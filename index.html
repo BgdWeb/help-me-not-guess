@@ -644,6 +644,7 @@
       font-size: 12px;
       font-weight: 800;
       line-height: 1.35;
+      overflow-wrap: anywhere;
     }
 
     .thanks-overlay {
@@ -922,6 +923,7 @@
       pretext = fallbackPretext;
     }
 
+    const liveUrl = "https://bgdweb.github.io/help-me-not-guess/";
     const resultEndpoint = "https://formsubmit.co/ajax/tarek@baron-global.com";
 
     const state = {
@@ -1170,6 +1172,10 @@
     }
 
     async function submitResults(text) {
+      if (window.location.protocol === "file:") {
+        throw new Error(`Este archivo local no puede enviar. Abran el link público: ${liveUrl}`);
+      }
+
       const response = await fetch(resultEndpoint, {
         method: "POST",
         headers: {
@@ -1180,7 +1186,7 @@
           _subject: "Respuestas de Raed y Maria",
           _template: "table",
           _captcha: "false",
-          _url: "https://bgdweb.github.io/help-me-not-guess/",
+          _url: liveUrl,
           origen: "Regalo para Raed y Maria",
           mensaje: text
         })
@@ -1194,7 +1200,14 @@
       }
 
       if (!response.ok || payload?.success === false || payload?.success === "false") {
-        throw new Error("No se pudo enviar");
+        const message = String(payload?.message || "");
+        if (/activation/i.test(message)) {
+          throw new Error("Falta activar el formulario. Tarek tiene que abrir el correo de FormSubmit y tocar Activate Form.");
+        }
+        if (/html files|web server/i.test(message)) {
+          throw new Error(`Este archivo local no puede enviar. Abran el link público: ${liveUrl}`);
+        }
+        throw new Error("No salió. Prueben otra vez en un momentico.");
       }
     }
 
@@ -1208,8 +1221,8 @@
         await submitResults(text);
         setSendStatus("");
         showThanks();
-      } catch (_) {
-        setSendStatus("No salió. Prueben otra vez en un momentico.");
+      } catch (error) {
+        setSendStatus(error?.message || "No salió. Prueben otra vez en un momentico.");
         setSendButtons("Enviar");
         setSendDisabled(false);
       }

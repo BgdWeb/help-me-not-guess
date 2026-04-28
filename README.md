@@ -8,6 +8,8 @@ Las respuestas usan un endpoint de formulario externo: al tocar **Enviar**, la p
 
 La primera vez, FormSubmit puede mandar un correo de activación a Tarek; después de confirmar, las respuestas llegan directo al inbox.
 
+Importante: el envío automático solo funciona desde `https://bgdweb.github.io/help-me-not-guess/`, no desde una copia `file://` abierta localmente.
+
 ## Qué Prueba
 
 - Cuatro ideas simples para la casa nueva.
