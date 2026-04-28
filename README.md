@@ -1,18 +1,18 @@
-# Help Me Not Guess
+# Regalo para Raed y Maria
 
-A sendable static prototype for helping a friend tell you what housewarming gifts would actually be useful.
+Un prototipo estático y enviable para que Raed y Maria le digan a Tarek qué regalo les sirve para la casa nueva.
 
-Open `index.html` directly in a browser. The artifact is intentionally static and includes local SVG assets, so it does not need a build step or dev server.
+Abre `index.html` directamente en el navegador. Es estático, con assets SVG locales, así que no necesita build ni servidor.
 
-Results use a zero-backend flow: when a friend taps **Send picks**, the page opens a prefilled email to Tarek and copies the response text as a fallback.
+Las respuestas no usan backend: al tocar **Enviar**, la página abre un correo listo para Tarek y copia el texto como respaldo.
 
-## What It Tests
+## Qué Prueba
 
-- Starting with a few thoughtful guesses instead of asking from a blank page.
-- Letting the recipient answer Yes, No, or suggest something better.
-- Keeping photos and links optional.
-- Avoiding price, budget, and cost language in the recipient-facing flow.
+- Cinco ideas simples para la casa nueva.
+- Responder Sí, No, u otra idea.
+- Links y fotos opcionales.
+- Sin precios ni presupuesto en la vista de Raed y Maria.
 
 ## QA
 
-Final QA passed on 2026-04-28 across mobile, tablet, and desktop viewports.
+QA final aprobada el 2026-04-28 en móvil, tablet y desktop.
