@@ -9,7 +9,7 @@ Results use a zero-backend flow: when a friend taps **Send picks**, the page ope
 ## What It Tests
 
 - Starting with a few thoughtful guesses instead of asking from a blank page.
-- Letting the recipient keep, skip, or suggest something better.
+- Letting the recipient answer Yes, No, or suggest something better.
 - Keeping photos and links optional.
 - Avoiding price, budget, and cost language in the recipient-facing flow.
 

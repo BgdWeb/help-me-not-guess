@@ -555,8 +555,10 @@
       font-weight: 900;
     }
 
-    .wish-actions .keep { background: var(--green); color: #fff; border-color: var(--green); }
-    .wish-actions .skip { color: var(--ink); }
+    .wish-actions .yes { color: var(--green-dark); border-color: #b6ddca; }
+    .wish-actions .yes[aria-pressed="true"] { background: var(--green); color: #fff; border-color: var(--green); }
+    .wish-actions .no { color: var(--ink); }
+    .wish-actions .no[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
 
     .add-box {
       margin: 12px 0 0;
@@ -690,11 +692,11 @@
       <section class="hero" aria-labelledby="screen-title">
         <div class="eyebrow">Private link for your new apartment</div>
         <h1 id="screen-title">Tarek wants to get you something useful.</h1>
-        <p class="lead">He added a few guesses so this is quick. Keep what fits, skip what does not, or suggest something better.</p>
+        <p class="lead">He added a few guesses so this is quick. Tap Yes for anything you would use, No for anything you would not, or suggest something better.</p>
         <div class="hero-strip" aria-label="Key product rules">
           <span class="pill">Takes 2 minutes</span>
           <span class="pill sky">No account</span>
-          <span class="pill coral">Keep or skip</span>
+          <span class="pill coral">Yes or No</span>
           <span class="pill butter">Suggest anything</span>
         </div>
       </section>
@@ -729,7 +731,7 @@
 
         <aside class="message-card" aria-label="Message draft">
           <strong>WhatsApp note</strong>
-          <p data-message-copy>I want to get you something useful for the new apartment, but I don't want to guess wrong. Can you keep or add a few things here? Big or small is fine. I'll pick one.</p>
+          <p data-message-copy>I want to get you something useful for the new apartment, but I don't want to guess wrong. Can you tap Yes or No on a few ideas and add anything better? Big or small is fine. I'll pick one.</p>
           <button class="button dark full" type="button" data-copy-message>Copy note</button>
         </aside>
       </section>
@@ -749,9 +751,9 @@
         <div class="panel-head">
           <div>
             <h2 id="confirmed-title">Confirmed ideas</h2>
-            <p class="panel-note">These are the ideas your friend kept or added.</p>
+            <p class="panel-note">These are the ideas your friend said yes to or added.</p>
           </div>
-          <span class="tiny green" data-confirmed-count>0 kept</span>
+          <span class="tiny green" data-confirmed-count>0 yes</span>
         </div>
         <div class="friend-grid" data-confirmed-grid aria-live="polite"></div>
       </section>
@@ -762,7 +764,7 @@
         <div class="phone-head">
           <small>From Tarek</small>
           <h2>Which of these would actually help?</h2>
-          <p>Keep any idea you would use. Skip anything you do not need. Add something else if he missed.</p>
+          <p>Tap Yes for anything you would use. Tap No for anything you would not. Add something else if he missed.</p>
         </div>
         <div class="phone-tabs" role="tablist" aria-label="Recipient sections">
           <button class="tab active" type="button" data-scroll-review>Review</button>
@@ -913,8 +915,8 @@
               <p>${escape(item.note || "Optional link can be added later")}</p>
             </div>
             <div class="wish-actions">
-              <button class="keep" type="button" data-keep="${item.id}">${item.status === "kept" ? "Kept" : "Keep"}</button>
-              <button class="skip" type="button" data-skip="${item.id}">${item.status === "skipped" ? "Skipped" : "Skip"}</button>
+              <button class="yes" type="button" data-keep="${item.id}" aria-pressed="${item.status === "kept"}">Yes</button>
+              <button class="no" type="button" data-skip="${item.id}" aria-pressed="${item.status === "skipped"}">No</button>
             </div>
           </div>
         </article>
@@ -948,7 +950,7 @@
             <strong>${escape(item.title)}</strong>
             <span>${escape(item.note || "Added by recipient")}</span>
           </div>
-          <span class="tiny green">${escape(item.tag || "Kept")}</span>
+          <span class="tiny green">${escape(item.tag || "Yes")}</span>
         </div>
       `;
     }
@@ -966,19 +968,18 @@
     }
 
     function render() {
-      const openItems = state.items.filter((item) => item.status !== "skipped");
       els.starterBoard.innerHTML = state.items.slice(0, 6).map(seedCard).join("");
-      els.recipientList.innerHTML = openItems.map(itemCard).join("");
+      els.recipientList.innerHTML = state.items.map(itemCard).join("");
       els.confirmedGrid.innerHTML = state.confirmed.map(friendCard).join("");
       els.phoneConfirmed.innerHTML = state.confirmed.map(confirmedRow).join("");
       els.seedCount.textContent = state.items.length + (state.items.length === 1 ? " idea" : " ideas");
-      els.confirmedCount.textContent = state.confirmed.length + (state.confirmed.length === 1 ? " kept" : " kept");
+      els.confirmedCount.textContent = state.confirmed.length + (state.confirmed.length === 1 ? " yes" : " yes");
       wirePretext(document);
     }
 
-    function addConfirmed(item, note = "Kept by recipient") {
+    function addConfirmed(item, note = "Yes from recipient") {
       if (!state.confirmed.some((candidate) => candidate.id === item.id)) {
-        state.confirmed.unshift({ ...item, note, tag: item.tag === "Added" ? "Added" : "Kept" });
+        state.confirmed.unshift({ ...item, note, tag: item.tag === "Added" ? "Added" : "Yes" });
       }
     }
 
@@ -1021,22 +1022,22 @@
     }
 
     function buildReplyText() {
-      const kept = state.confirmed.filter((item) => item.tag !== "Added");
+      const yesItems = state.confirmed.filter((item) => item.tag !== "Added");
       const added = state.confirmed.filter((item) => item.tag === "Added");
-      const skipped = state.items.filter((item) => item.status === "skipped");
+      const noItems = state.items.filter((item) => item.status === "skipped");
       const lines = [
         "Hi Tarek,",
         "",
-        "Here are the housewarming ideas I would actually use.",
+        "Here are my housewarming answers.",
         "",
-        "Keep:"
+        "Yes:"
       ];
 
-      lines.push(...(kept.length ? kept.map(responseLine) : ["- Nothing from the starter list"]));
+      lines.push(...(yesItems.length ? yesItems.map(responseLine) : ["- No starter ideas marked yes"]));
       lines.push("", "Something else:");
       lines.push(...(added.length ? added.map(responseLine) : ["- No extra idea added"]));
-      lines.push("", "Skip:");
-      lines.push(...(skipped.length ? skipped.map(responseLine) : ["- Nothing skipped"]));
+      lines.push("", "No:");
+      lines.push(...(noItems.length ? noItems.map(responseLine) : ["- No starter ideas marked no"]));
       lines.push("", "Sent from Help Me Not Guess.");
       return lines.join("\n");
     }
