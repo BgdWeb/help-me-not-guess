@@ -304,7 +304,7 @@
       overflow: hidden;
     }
 
-    .upload-tile.small { min-height: 112px; background-image: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.58)), url("assets/photo-kettle.svg"); }
+    .upload-tile.small { min-height: 112px; background-image: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.58)), url("assets/photo-plant.svg"); }
     .upload-tile input {
       width: 100%;
       min-height: 38px;
@@ -690,14 +690,14 @@
   <main class="page">
     <section class="workbench" data-demo-root aria-labelledby="screen-title">
       <section class="hero" aria-labelledby="screen-title">
-        <div class="eyebrow">Regalo para la casa nueva</div>
-        <h1 id="screen-title">Raed y Maria, ¿qué les sirve?</h1>
-        <p class="lead">Tarek no quiere adivinar. Marquen Sí, No, o agreguen otra idea.</p>
+        <div class="eyebrow">Regalito para estrenar casa</div>
+        <h1 id="screen-title">Raed y Maria, ayúdenme a no meter la pata.</h1>
+        <p class="lead">Marquen Sí, No, o lancen una idea mejor para la casa nueva.</p>
         <div class="hero-strip" aria-label="Resumen">
-          <span class="pill">1 minuto</span>
+          <span class="pill">Un minutico</span>
           <span class="pill sky">Sin cuenta</span>
           <span class="pill coral">Sí o No</span>
-          <span class="pill butter">Otra idea</span>
+          <span class="pill butter">Se aceptan antojos</span>
         </div>
       </section>
 
@@ -731,7 +731,7 @@
 
         <aside class="message-card" aria-label="Mensaje">
           <strong>Mensaje</strong>
-          <p data-message-copy>Raed y Maria, quiero regalarles algo útil para la casa nueva y no quiero adivinar. ¿Me marcan Sí o No en estas ideas y agregan otra si hace falta?</p>
+          <p data-message-copy>Raed y Maria, quiero regalarles algo brutal para la casa nueva, pero no quiero meter la pata. ¿Me marcan Sí o No y agregan otra idea si se les ocurre?</p>
           <button class="button dark full" type="button" data-copy-message>Copiar</button>
         </aside>
       </section>
@@ -740,7 +740,7 @@
         <div class="panel-head">
           <div>
             <h2 id="starter-board-title">Ideas</h2>
-            <p class="panel-note">Opciones rápidas para la casa nueva.</p>
+            <p class="panel-note">Opciones rápidas. Cero compromiso.</p>
           </div>
           <span class="tiny sky" data-seed-count>3 ideas</span>
         </div>
@@ -763,8 +763,8 @@
       <div class="phone-screen">
         <div class="phone-head">
           <small>De Tarek</small>
-          <h2>¿Qué les sirve para la casa?</h2>
-          <p>Toquen Sí, No, o agreguen otra cosa.</p>
+          <h2>¿Qué sí usarían?</h2>
+          <p>Sin pena: Sí, No, u otra idea mejor.</p>
         </div>
         <div class="phone-tabs" role="tablist" aria-label="Secciones">
           <button class="tab active" type="button" data-scroll-review>Ideas</button>
@@ -772,11 +772,11 @@
         </div>
         <div class="review-list" data-recipient-list aria-live="polite"></div>
         <div class="add-box" id="recipient-add">
-          <h3>¿Otra idea?</h3>
+          <h3>¿Se les ocurre algo mejor?</h3>
           <form data-recipient-form>
             <div class="field">
               <label for="recipient-title">¿Qué les hace falta?</label>
-              <input id="recipient-title" data-recipient-title type="text" placeholder="Mesa de centro" autocomplete="off" required>
+              <input id="recipient-title" data-recipient-title type="text" placeholder="Mesa de centro, planta, cafetera..." autocomplete="off" required>
             </div>
             <div class="field">
               <label for="recipient-link">Link opcional</label>
@@ -824,15 +824,14 @@
     const resultEmail = "tarek@baron-global.com";
 
     const state = {
-      nextId: 6,
+      nextId: 5,
       seedPhoto: "assets/photo-lamp.svg",
-      recipientPhoto: "assets/photo-kettle.svg",
+      recipientPhoto: "assets/photo-plant.svg",
       items: [
-        { id: 1, title: "TV para la sala", note: "Idea de Tarek", tag: "Idea", image: "assets/photo-tv.svg", status: "open" },
-        { id: 2, title: "Banquitos para la cocina", note: "Con foto", tag: "Foto", image: "assets/photo-stools.svg", status: "open" },
-        { id: 3, title: "Juego de toallas", note: "Útil para la casa", tag: "Idea", image: "assets/photo-towels.svg", status: "open" },
-        { id: 4, title: "Lámpara de piso", note: "Fácil de cambiar", tag: "Quizás", image: "assets/photo-lamp.svg", status: "open" },
-        { id: 5, title: "Tetera eléctrica", note: "Algo pequeño", tag: "Link opcional", image: "assets/photo-kettle.svg", status: "open" }
+        { id: 1, title: "TV para la sala", note: "Para pelis y partidos", tag: "Idea", image: "assets/photo-tv.svg", status: "open" },
+        { id: 2, title: "Banquitos para la cocina", note: "Para desayunar sabroso", tag: "Foto", image: "assets/photo-stools.svg", status: "open" },
+        { id: 3, title: "Juego de toallas", note: "Para estrenar baño", tag: "Idea", image: "assets/photo-towels.svg", status: "open" },
+        { id: 4, title: "Lámpara de piso", note: "Para poner lindo el rincón", tag: "Quizás", image: "assets/photo-lamp.svg", status: "open" }
       ],
       confirmed: []
     };
@@ -1028,7 +1027,7 @@
       const lines = [
         "Hola Tarek,",
         "",
-        "Somos Raed y Maria. Estas son nuestras respuestas para la casa nueva.",
+        "Somos Raed y Maria. Aquí va el veredicto para la casa nueva.",
         "",
         "Sí:"
       ];
