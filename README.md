@@ -10,8 +10,10 @@ Las respuestas no usan backend: al tocar **Enviar**, la página abre un correo l
 
 - Cuatro ideas simples para la casa nueva.
 - Responder Sí, No, u otra idea.
+- Separar claramente las ideas de Tarek de lo que Raed y Maria sí quieren.
 - Links y fotos opcionales.
 - Sin precios ni presupuesto en la vista de Raed y Maria.
+- Chiste interno: cualquier regalo viene con la pepa azul para Raed.
 
 ## QA
 

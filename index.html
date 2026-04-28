@@ -476,6 +476,18 @@
       line-height: 1.45;
     }
 
+    .phone-note {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border: 1px dashed #d9cdb8;
+      border-radius: var(--radius);
+      background: #fff8e2;
+      color: #604b16;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
     .phone-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -502,6 +514,25 @@
       display: grid;
       gap: 12px;
       padding: 0;
+    }
+
+    .list-label {
+      margin: 6px 0 10px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .list-label span {
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: none;
     }
 
     .wish-card {
@@ -579,6 +610,27 @@
       display: grid;
       gap: 10px;
       margin-top: 12px;
+    }
+
+    .confirmed-label {
+      display: block;
+      margin-top: 14px;
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .empty-confirmed {
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      background: #fffdfa;
+      color: var(--muted);
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
     }
 
     .finish-button {
@@ -765,11 +817,13 @@
           <small>De Tarek</small>
           <h2>¿Qué sí usarían?</h2>
           <p>Sin pena: Sí, No, u otra idea mejor.</p>
+          <p class="phone-note">Aclaratoria seria: estas son ideas de Tarek, no una lista final. El regalo ganador viene con bonus automático: la pepa azul para Raed. Chiste interno, no aceptamos reclamos.</p>
         </div>
         <div class="phone-tabs" role="tablist" aria-label="Secciones">
-          <button class="tab active" type="button" data-scroll-review>Ideas</button>
+          <button class="tab active" type="button" data-scroll-review>Ideas de Tarek</button>
           <button class="tab" type="button" data-scroll-add>Otra cosa</button>
         </div>
+        <div class="list-label">Ideas de Tarek <span>ustedes responden Sí o No</span></div>
         <div class="review-list" data-recipient-list aria-live="polite"></div>
         <div class="add-box" id="recipient-add">
           <h3>¿Se les ocurre algo mejor?</h3>
@@ -790,6 +844,7 @@
             </div>
             <button class="button primary full" type="submit">Agregar</button>
           </form>
+          <strong class="confirmed-label">Lo que ustedes sí quieren</strong>
           <div class="confirmed-list" data-phone-confirmed aria-label="Ideas marcadas sí"></div>
           <button class="button primary full finish-button" type="button" data-send-choices>Enviar</button>
           <p class="send-status" data-send-status aria-live="polite"></p>
@@ -828,10 +883,10 @@
       seedPhoto: "assets/photo-lamp.svg",
       recipientPhoto: "assets/photo-plant.svg",
       items: [
-        { id: 1, title: "TV para la sala", note: "Para pelis y partidos", tag: "Idea", image: "assets/photo-tv.svg", status: "open" },
-        { id: 2, title: "Banquitos para la cocina", note: "Para desayunar sabroso", tag: "Foto", image: "assets/photo-stools.svg", status: "open" },
-        { id: 3, title: "Juego de toallas", note: "Para estrenar baño", tag: "Idea", image: "assets/photo-towels.svg", status: "open" },
-        { id: 4, title: "Lámpara de piso", note: "Para poner lindo el rincón", tag: "Quizás", image: "assets/photo-lamp.svg", status: "open" }
+        { id: 1, title: "TV para la sala", note: "Idea de Tarek: para pelis y partidos", tag: "De Tarek", image: "assets/photo-tv.svg", status: "open" },
+        { id: 2, title: "Banquitos para la cocina", note: "Idea de Tarek: para desayunar sabroso", tag: "De Tarek", image: "assets/photo-stools.svg", status: "open" },
+        { id: 3, title: "Juego de toallas", note: "Idea de Tarek: para estrenar baño", tag: "De Tarek", image: "assets/photo-towels.svg", status: "open" },
+        { id: 4, title: "Lámpara de piso", note: "Idea de Tarek: para poner lindo el rincón", tag: "De Tarek", image: "assets/photo-lamp.svg", status: "open" }
       ],
       confirmed: []
     };
@@ -970,7 +1025,9 @@
       els.starterBoard.innerHTML = state.items.slice(0, 6).map(seedCard).join("");
       els.recipientList.innerHTML = state.items.map(itemCard).join("");
       els.confirmedGrid.innerHTML = state.confirmed.map(friendCard).join("");
-      els.phoneConfirmed.innerHTML = state.confirmed.map(confirmedRow).join("");
+      els.phoneConfirmed.innerHTML = state.confirmed.length
+        ? state.confirmed.map(confirmedRow).join("")
+        : '<div class="empty-confirmed">Aquí va saliendo lo que ustedes marcaron Sí o agregaron.</div>';
       els.seedCount.textContent = state.items.length + (state.items.length === 1 ? " idea" : " ideas");
       els.confirmedCount.textContent = state.confirmed.length + (state.confirmed.length === 1 ? " sí" : " sí");
       wirePretext(document);
@@ -978,7 +1035,7 @@
 
     function addConfirmed(item, note = "Sí de Raed y Maria") {
       if (!state.confirmed.some((candidate) => candidate.id === item.id)) {
-        state.confirmed.unshift({ ...item, note, tag: item.tag === "Agregado" ? "Agregado" : "Sí" });
+        state.confirmed.unshift({ ...item, note, tag: item.tag === "De ustedes" ? "De ustedes" : "Sí" });
       }
     }
 
@@ -1021,8 +1078,8 @@
     }
 
     function buildReplyText() {
-      const yesItems = state.confirmed.filter((item) => item.tag !== "Agregado");
-      const added = state.confirmed.filter((item) => item.tag === "Agregado");
+      const yesItems = state.confirmed.filter((item) => item.tag !== "De ustedes");
+      const added = state.confirmed.filter((item) => item.tag === "De ustedes");
       const noItems = state.items.filter((item) => item.status === "skipped");
       const lines = [
         "Hola Tarek,",
@@ -1037,6 +1094,7 @@
       lines.push(...(added.length ? added.map(responseLine) : ["- No agregamos otra idea"]));
       lines.push("", "No:");
       lines.push(...(noItems.length ? noItems.map(responseLine) : ["- Ninguna idea marcada no"]));
+      lines.push("", "P.D. Tarek dice que cualquier regalo viene automáticamente con la pepa azul para Raed. Eso queda entre ustedes.");
       lines.push("", "Gracias!");
       return lines.join("\n");
     }
@@ -1120,8 +1178,8 @@
       const item = {
         id: state.nextId++,
         title,
-        note: hasLink ? "Agregado con link" : "Agregado por Raed y Maria",
-        tag: "Agregado",
+        note: hasLink ? "Idea de ustedes con link" : "Idea de ustedes",
+        tag: "De ustedes",
         image: state.recipientPhoto,
         link: els.recipientLink.value.trim(),
         status: "kept"
@@ -1190,7 +1248,7 @@
       }
 
       if (review) {
-        setActiveTab("Ideas");
+        setActiveTab("Ideas de Tarek");
         document.querySelector("[data-recipient-list]").scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
     });
